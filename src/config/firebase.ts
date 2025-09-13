@@ -11,8 +11,8 @@ const firebaseConfig = {
   projectId: "snapchatclone-ccdf9",
   storageBucket: "snapchatclone-ccdf9.firebasestorage.app",
   messagingSenderId: "120609396467",
-  appId: "1:120609396467:web:9000c3298683e020f40986",
-  measurementId: "G-XVC3ECT41L"
+  appId: "1:120609396467:web:4ad84c7c8f8e442df40986",
+  measurementId: "G-97Y00YL44L"
 };
 
 // Initialize Firebase
