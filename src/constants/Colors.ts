@@ -1,0 +1,40 @@
+export const Colors = {
+  primary: "#075e54",
+  primaryDark: "#054d44",
+  secondary: "#25d366",
+  accent: "#dcf8c6",
+  white: "#ffffff",
+  black: "#000000",
+  gray: {
+    100: "#f8f9fa",
+    200: "#e9ecef",
+    300: "#dee2e6",
+    400: "#ced4da",
+    500: "#adb5bd",
+    600: "#6c757d",
+    700: "#495057",
+    800: "#343a40",
+    900: "#212529",
+  },
+  text: {
+    primary: "#212529",
+    secondary: "#667781",
+    light: "#8696a0",
+    white: "#ffffff",
+  },
+  background: {
+    default: "#ffffff",
+    chat: "#ece5dd",
+    paper: "#f8f9fa",
+  },
+  status: {
+    online: "#25d366",
+    away: "#ffab00",
+    offline: "#6c757d",
+  },
+  message: {
+    sent: "#dcf8c6",
+    received: "#ffffff",
+    system: "#e1f5fe",
+  },
+};

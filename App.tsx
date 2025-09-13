@@ -1,47 +1,60 @@
 import React from "react";
-import { StyleSheet, SafeAreaView, Text } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.h1}>Hello CodeSandbox</Text>
-        <Text style={styles.h2}>
-          Start editing to see some magic happen, even on your mobile device!
-        </Text>
-        <br />
-        <br />
-        <Text style={styles.paragraph}>
-          Open Expo on your mobile device with scanning the QR code in the
-          application log under the start tab.
-        </Text>
-      </SafeAreaView>
-    );
-  }
+import MainTabNavigator from "./src/navigation/MainTabNavigator";
+import ChatScreen from "./src/screens/ChatScreen";
+import ContactInfoScreen from "./src/screens/ContactInfoScreen";
+import SettingsScreen from "./src/screens/SettingsScreen";
+import { RootStackParamList } from "./src/types";
+import { Colors } from "./src/constants/Colors";
+
+const Stack = createStackNavigator<RootStackParamList>();
+
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <StatusBar style="light" backgroundColor={Colors.primary} />
+        <Stack.Navigator
+          initialRouteName="Main"
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: Colors.primary,
+            },
+            headerTintColor: Colors.white,
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+        >
+          <Stack.Screen
+            name="Main"
+            component={MainTabNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Chat"
+            component={ChatScreen}
+            options={({ route }) => ({
+              title: route.params.chatName,
+              headerBackTitleVisible: false,
+            })}
+          />
+          <Stack.Screen
+            name="ContactInfo"
+            component={ContactInfoScreen}
+            options={{ title: "Contact Info" }}
+          />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{ title: "Settings" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#ecf0f1",
-    padding: 8,
-  },
-  paragraph: {
-    margin: 8,
-    fontSize: 16,
-    textAlign: "center",
-  },
-  h1: {
-    margin: 28,
-    fontSize: 36,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  h2: {
-    margin: 16,
-    fontSize: 28,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-});
