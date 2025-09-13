@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import { Chat, User, RootStackParamList } from "../types";
 import { Colors } from "../constants/Colors";
-import { formatChatTime, truncateText } from "../utils/helpers";
 import { mockChats, mockUsers, currentUser } from "../data/mockData";
 import ChatItem from "../components/ChatItem";
 
@@ -26,16 +25,11 @@ export default function ChatsScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
-  const filteredChats = chats.filter((chat) => {
-    const chatName = getChatName(chat);
-    return chatName.toLowerCase().includes(searchQuery.toLowerCase());
-  });
-
+  // Move this function above any usage
   const getChatName = (chat: Chat): string => {
     if (chat.type === "group") {
       return chat.name || "Group";
     }
-
     const otherUserId = chat.participants.find((id) => id !== currentUser.id);
     const otherUser = mockUsers.find((user) => user.id === otherUserId);
     return otherUser?.name || "Unknown";
@@ -45,7 +39,6 @@ export default function ChatsScreen() {
     if (chat.type === "group") {
       return chat.avatar || "👥";
     }
-
     const otherUserId = chat.participants.find((id) => id !== currentUser.id);
     const otherUser = mockUsers.find((user) => user.id === otherUserId);
     return otherUser?.avatar || "👤";
@@ -55,6 +48,11 @@ export default function ChatsScreen() {
     const otherUserId = chat.participants.find((id) => id !== currentUser.id);
     return mockUsers.find((user) => user.id === otherUserId);
   };
+
+  const filteredChats = chats.filter((chat) => {
+    const chatName = getChatName(chat);
+    return chatName.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   const handleChatPress = (chat: Chat) => {
     const chatName = getChatName(chat);
