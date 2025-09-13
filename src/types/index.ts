@@ -14,14 +14,14 @@ export interface Message {
   senderId: string;
   chatId: string;
   timestamp: Date;
-  status: "sending" | "sent" | "delivered" | "read";
-  type: "text" | "image" | "audio" | "video" | "document";
+  status: 'sending' | 'sent' | 'delivered' | 'read';
+  type: 'text' | 'image' | 'audio' | 'video' | 'document';
   mediaUrl?: string;
 }
 
 export interface Chat {
   id: string;
-  type: "individual" | "group";
+  type: 'individual' | 'group';
   name?: string; // For group chats
   participants: string[]; // User IDs
   lastMessage?: Message;
@@ -48,7 +48,7 @@ export interface Contact {
 export interface StatusUpdate {
   id: string;
   userId: string;
-  type: "text" | "image" | "video";
+  type: 'text' | 'image' | 'video';
   content: string;
   mediaUrl?: string;
   backgroundColor?: string;
@@ -56,15 +56,15 @@ export interface StatusUpdate {
   timestamp: Date;
   expiresAt: Date;
   viewers: string[];
-  privacy: "all" | "contacts" | "selected" | "except";
+  privacy: 'all' | 'contacts' | 'selected' | 'except';
   selectedContacts?: string[];
   exceptContacts?: string[];
 }
 
 export interface Call {
   id: string;
-  type: "audio" | "video";
-  status: "incoming" | "outgoing" | "missed" | "rejected";
+  type: 'audio' | 'video';
+  status: 'incoming' | 'outgoing' | 'missed' | 'rejected';
   participants: string[];
   initiatedBy: string;
   startTime: Date;
@@ -75,7 +75,7 @@ export interface Call {
 export interface Notification {
   id: string;
   userId: string;
-  type: "message" | "call" | "group_invite" | "contact_joined";
+  type: 'message' | 'call' | 'group_invite' | 'contact_joined';
   title: string;
   body: string;
   data?: any;
