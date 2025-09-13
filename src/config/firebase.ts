@@ -6,12 +6,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Your Firebase config - Replace with your actual config
 const firebaseConfig = {
-  apiKey: "your-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your-app-id"
+  apiKey: "AIzaSyB_vY1F50HSfxdneJrhz8u4XS_7TSfuHcg",
+  authDomain: "snapchatclone-ccdf9.firebaseapp.com",
+  projectId: "snapchatclone-ccdf9",
+  storageBucket: "snapchatclone-ccdf9.firebasestorage.app",
+  messagingSenderId: "120609396467",
+  appId: "1:120609396467:web:9000c3298683e020f40986",
+  measurementId: "G-XVC3ECT41L"
 };
 
 // Initialize Firebase
