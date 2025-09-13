@@ -1,14 +1,25 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User as FirebaseUser } from 'firebase/auth';
-import { User } from '../types';
-import { AuthService } from '../services/authService';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { User as FirebaseUser } from "firebase/auth";
+import { User } from "../types";
+import { AuthService } from "../services/authService";
 
 interface AuthContextType {
   user: User | null;
   firebaseUser: FirebaseUser | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name: string, phone: string) => Promise<void>;
+  signUp: (
+    email: string,
+    password: string,
+    name: string,
+    phone: string
+  ) => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<void>;
 }
@@ -18,7 +29,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -34,67 +45,69 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = AuthService.onAuthStateChanged(async (firebaseUser) => {
+      console.log(
+        "Auth state changed:",
+        firebaseUser ? "User logged in" : "User logged out"
+      );
+
       setFirebaseUser(firebaseUser);
-      
+
       if (firebaseUser) {
-        // Get user data from Firestore
-        const userData = await AuthService.getCurrentUserData();
-        setUser(userData);
-        
-        // Update online status
-        await AuthService.updateUserStatus(firebaseUser.uid, true);
+        try {
+          // Get user data from Firestore
+          const userData = await AuthService.getCurrentUserData();
+          setUser(userData);
+
+          // Update online status
+          await AuthService.updateUserStatus(firebaseUser.uid, true);
+        } catch (error) {
+          console.error("Error loading user data:", error);
+        }
       } else {
         setUser(null);
       }
-      
+
       setLoading(false);
     });
 
     return unsubscribe;
   }, []);
 
-  // Handle app state changes for online/offline status
-  useEffect(() => {
-    const handleAppStateChange = async (nextAppState: string) => {
-      if (firebaseUser) {
-        const isOnline = nextAppState === 'active';
-        await AuthService.updateUserStatus(firebaseUser.uid, isOnline);
-      }
-    };
-
-    // Note: In a real React Native app, you'd use AppState from react-native
-    // For now, we'll handle visibility change for web
-    const handleVisibilityChange = async () => {
-      if (firebaseUser) {
-        const isOnline = !document.hidden;
-        await AuthService.updateUserStatus(firebaseUser.uid, isOnline);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [firebaseUser]);
-
   const signIn = async (email: string, password: string) => {
     try {
+      setLoading(true);
       const userData = await AuthService.signInWithEmail(email, password);
       setUser(userData);
-    } catch (error) {
-      console.error('Sign in error:', error);
+      console.log("Sign in successful:", userData.name);
+    } catch (error: any) {
+      console.error("Sign in error:", error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const signUp = async (email: string, password: string, name: string, phone: string) => {
+  const signUp = async (
+    email: string,
+    password: string,
+    name: string,
+    phone: string
+  ) => {
     try {
-      const userData = await AuthService.signUpWithEmail(email, password, name, phone);
+      setLoading(true);
+      const userData = await AuthService.signUpWithEmail(
+        email,
+        password,
+        name,
+        phone
+      );
       setUser(userData);
-    } catch (error) {
-      console.error('Sign up error:', error);
+      console.log("Sign up successful:", userData.name);
+    } catch (error: any) {
+      console.error("Sign up error:", error);
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,8 +116,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       await AuthService.signOut();
       setUser(null);
       setFirebaseUser(null);
-    } catch (error) {
-      console.error('Sign out error:', error);
+      console.log("Sign out successful");
+    } catch (error: any) {
+      console.error("Sign out error:", error);
       throw error;
     }
   };
@@ -115,8 +129,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         await AuthService.updateUserProfile(user.id, updates);
         setUser({ ...user, ...updates });
       }
-    } catch (error) {
-      console.error('Update profile error:', error);
+    } catch (error: any) {
+      console.error("Update profile error:", error);
       throw error;
     }
   };

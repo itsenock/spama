@@ -5,10 +5,6 @@ import {
   onAuthStateChanged,
   User as FirebaseUser,
   updateProfile,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-  PhoneAuthProvider,
-  signInWithCredential,
 } from "firebase/auth";
 import {
   doc,
@@ -21,7 +17,7 @@ import { auth, db } from "../config/firebase";
 import { User } from "../types";
 
 export class AuthService {
-  // Email/Password Authentication
+  // Sign up with email and password
   static async signUpWithEmail(
     email: string,
     password: string,
@@ -36,7 +32,7 @@ export class AuthService {
       );
       const firebaseUser = userCredential.user;
 
-      // Update profile
+      // Update Firebase profile
       await updateProfile(firebaseUser, { displayName: name });
 
       // Create user document in Firestore
@@ -58,12 +54,13 @@ export class AuthService {
       });
 
       return userData;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Sign up error:", error);
-      throw error;
+      throw new Error(error.message || "Failed to create account");
     }
   }
 
+  // Sign in with email and password
   static async signInWithEmail(email: string, password: string): Promise<User> {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -79,52 +76,18 @@ export class AuthService {
       // Get user data from Firestore
       const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
       if (userDoc.exists()) {
-        return userDoc.data() as User;
+        const userData = userDoc.data() as User;
+        return {
+          ...userData,
+          id: firebaseUser.uid,
+        };
       } else {
-        throw new Error("User data not found");
-      }
-    } catch (error) {
-      console.error("Sign in error:", error);
-      throw error;
-    }
-  }
-
-  // Phone Authentication
-  static async sendPhoneVerification(
-    phoneNumber: string,
-    recaptchaVerifier: RecaptchaVerifier
-  ) {
-    try {
-      const confirmationResult = await signInWithPhoneNumber(
-        auth,
-        phoneNumber,
-        recaptchaVerifier
-      );
-      return confirmationResult;
-    } catch (error) {
-      console.error("Phone verification error:", error);
-      throw error;
-    }
-  }
-
-  static async verifyPhoneCode(
-    confirmationResult: any,
-    verificationCode: string,
-    name: string
-  ): Promise<User> {
-    try {
-      const userCredential = await confirmationResult.confirm(verificationCode);
-      const firebaseUser = userCredential.user;
-
-      // Check if user already exists
-      const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
-
-      if (!userDoc.exists()) {
-        // Create new user
+        // If user document doesn't exist, create one
         const userData: User = {
           id: firebaseUser.uid,
-          name,
-          phone: firebaseUser.phoneNumber || "",
+          name: firebaseUser.displayName || "User",
+          phone: "",
+          email: firebaseUser.email || "",
           online: true,
           status: "Hey there! I am using WhatsApp.",
           createdAt: new Date(),
@@ -138,14 +101,10 @@ export class AuthService {
         });
 
         return userData;
-      } else {
-        // Update existing user's online status
-        await this.updateUserStatus(firebaseUser.uid, true);
-        return userDoc.data() as User;
       }
-    } catch (error) {
-      console.error("Phone verification error:", error);
-      throw error;
+    } catch (error: any) {
+      console.error("Sign in error:", error);
+      throw new Error(error.message || "Failed to sign in");
     }
   }
 
@@ -156,9 +115,9 @@ export class AuthService {
         await this.updateUserStatus(auth.currentUser.uid, false);
       }
       await signOut(auth);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Sign out error:", error);
-      throw error;
+      throw new Error(error.message || "Failed to sign out");
     }
   }
 
@@ -188,9 +147,9 @@ export class AuthService {
         ...updates,
         updatedAt: serverTimestamp(),
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Update profile error:", error);
-      throw error;
+      throw new Error(error.message || "Failed to update profile");
     }
   }
 
