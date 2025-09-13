@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "120609396467",
+    "project_id": "snapchatclone-ccdf9",
+    "storage_bucket": "snapchatclone-ccdf9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120609396467:android:40ed06ced60288c7f40986",
+        "android_client_info": {
+          "package_name": "com.chat.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6PhXhMlPFHok8VlOBmZs6Q_Dd7fYdaok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120609396467:android:382fd0a0c6baa24af40986",
+        "android_client_info": {
+          "package_name": "com.enock.whatsappclone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6PhXhMlPFHok8VlOBmZs6Q_Dd7fYdaok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120609396467:android:fa444b248511bf8bf40986",
+        "android_client_info": {
+          "package_name": "com.myapp.whatsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6PhXhMlPFHok8VlOBmZs6Q_Dd7fYdaok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
